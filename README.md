@@ -1,4 +1,29 @@
-heroku-deploy
-=============
+# heroku-deploy
 
-A collection of rake tasks that help to deploy an application following a common way to every app. 
+A collection of rake tasks that help to deploy an application following a common way to every app.
+
+## Installation
+
+Add this line to your application's Gemfile:
+
+    gem 'heroku-deploy'
+
+And then execute:
+
+    $ bundle
+
+Or install it yourself as:
+
+    $ gem install heroku-deploy
+
+## Usage
+
+TODO: Write usage instructions here
+
+## Contributing
+
+1. Fork it
+2. Create your feature branch (`git checkout -b my-new-feature`)
+3. Commit your changes (`git commit -am 'Add some feature'`)
+4. Push to the branch (`git push origin my-new-feature`)
+5. Create new Pull Request
