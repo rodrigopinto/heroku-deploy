@@ -9,7 +9,7 @@ Gem::Specification.new do |gem|
   gem.authors       = ["Rodrigo Pinto"]
   gem.email         = ["rodrigopqn@gmail.com"]
   gem.description   = %q{A collection of rake tasks that help to deploy an application following a common way to every app.}
-  gem.summary       = %q{TODO: Write a gem summary}
+  gem.summary       = %q{A collection of rake tasks to make easy maintain a heroku application}
   gem.homepage      = ""
 
   gem.files         = `git ls-files`.split($/)
