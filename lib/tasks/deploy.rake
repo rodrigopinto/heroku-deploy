@@ -89,11 +89,13 @@ namespace :heroku do
   namespace :integration do
     APP = ENV["STAGING_APP"]
 
+    desc "Add heroku remote fork to git"
     task :add_remote do
       remote = `git remote |grep heroku`
       sh "git remote add heroku git@heroku.com:#{APP}.git" if remote.strip.blank?
     end
 
+    desc "Check if someone is already integration"
     task :check do
       var = `heroku config -s --app #{APP}|grep INTEGRATING_BY`
       integrating_by = var.split('=')[1]
@@ -105,11 +107,13 @@ namespace :heroku do
       end
     end
 
+    desc "Lock integration to the current user"
     task :lock do
       user = `whoami`
       sh "heroku config:add INTEGRATING_BY=#{user}"
     end
 
+    desc "Unlock integration"
     task :unlock do
       `heroku config:remove INTEGRATING_BY`
     end
