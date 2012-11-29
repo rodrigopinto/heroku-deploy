@@ -1,6 +1,6 @@
 # heroku-deploy
 
-A collection of rake tasks that help to deploy an application following a common way to every app.
+A collection of rake tasks that help deploy, backup and restore database for your heroku applications.
 
 ## Installation
 
@@ -18,7 +18,12 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+Set production and staging app name to to the env
+
+    $ export PRODUCTION_APP=myapp
+    $ export STAGING_APP=myapp-staging
+
+Now it is ready to use
 
 ## Contributing
 
