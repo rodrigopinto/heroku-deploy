@@ -75,7 +75,7 @@ namespace :heroku do
       run "heroku run rake db:migrate --app #{APP}"
 
       if maintenance
-        puts "Setting Maintenance off..."yellow
+        puts "Setting Maintenance off...".yellow
         run "heroku maintenance:off --app #{APP}"
       end
 
@@ -84,34 +84,34 @@ namespace :heroku do
 
       puts "-----> Done! :)...".green
     end
+  end
 
-    namespace :integration do
-      APP = ENV["STAGING_APP"]
+  namespace :integration do
+    APP = ENV["STAGING_APP"]
 
-      task :add_remote do
-        remote = `git remote |grep heroku`
-        sh "git remote add heroku git@heroku.com:#{APP}.git" if remote.strip.blank?
+    task :add_remote do
+      remote = `git remote |grep heroku`
+      sh "git remote add heroku git@heroku.com:#{APP}.git" if remote.strip.blank?
+    end
+
+    task :check do
+      var = `heroku config -s --app #{APP}|grep INTEGRATING_BY`
+      integrating_by = var.split('=')[1]
+      user = `whoami`
+
+      if !integrating_by.blank? and integrating_by != user
+        puts "Project is already being integrated by #{integrating_by}".red
+        exit
       end
+    end
 
-      task :check do
-        var = `heroku config -s --app #{APP}|grep INTEGRATING_BY`
-        integrating_by = var.split('=')[1]
-        user = `whoami`
+    task :lock do
+      user = `whoami`
+      sh "heroku config:add INTEGRATING_BY=#{user}"
+    end
 
-        if !integrating_by.blank? and integrating_by != user
-          puts "Project is already being integrated by #{integrating_by}".red
-          exit
-        end
-      end
-
-      task :lock do
-        user = `whoami`
-        sh "heroku config:add INTEGRATING_BY=#{user}"
-      end
-
-      task :unlock do
-        `heroku config:remove INTEGRATING_BY`
-      end
+    task :unlock do
+      `heroku config:remove INTEGRATING_BY`
     end
   end
 end

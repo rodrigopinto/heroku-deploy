@@ -4,27 +4,27 @@ namespace :heroku do
     raise "Command #{cmd.inspect} failed!" unless $?.success?
   end
 
-  namespace :backup do
-    def backup(app)
-      puts "-----> Backing-up #{app}...".yellow
-      run("heroku pgbackups:capture --app #{app} --expire")
-
-      puts "-----> Downloading backup...".yellow
-      run("curl -o #{app}-db-bkup `heroku pgbackups:url --app #{app}`")
-    end
-
-    desc "Copy database from production"
-    task :production => :environment do
-      backup(ENV["PRODUCTION_APP"])
-    end
-
-    desc "Copy database from staging"
-    task :staging => :environment do
-      backup(ENV["STAGING_APP"])
-    end
-  end
-
   namespace :db do
+    namespace :backup do
+      def backup(app)
+        puts "-----> Backing-up #{app}...".yellow
+        run("heroku pgbackups:capture --app #{app} --expire")
+
+        puts "-----> Downloading backup...".yellow
+        run("curl -o #{app}-db-bkup `heroku pgbackups:url --app #{app}`")
+      end
+
+      desc "Copy database from production"
+      task :production => :environment do
+        backup(ENV["PRODUCTION_APP"])
+      end
+
+      desc "Copy database from staging"
+      task :staging => :environment do
+        backup(ENV["STAGING_APP"])
+      end
+    end
+
     namespace :restore do
       def dbname
         config   = Rails.configuration.database_configuration
