@@ -10,7 +10,7 @@ namespace :heroku do
       run("heroku pgbackups:capture --app #{app} --expire")
 
       puts "-----> Downloading backup...".yellow
-      run("curl -o #{app}_db_bkup `heroku pgbackups:url --app #{app}`")
+      run("curl -o #{app}-db-bkup `heroku pgbackups:url --app #{app}`")
     end
 
     desc "Copy database from production"
@@ -26,10 +26,15 @@ namespace :heroku do
 
   namespace :db do
     namespace :restore do
+      def dbname
+        config   = Rails.configuration.database_configuration
+        config[Rails.env]["database"]
+      end
+
       def restore(app)
         puts "-----> Backup restoring...".yellow
 
-        run("pg_restore --verbose --clean --no-acl --no-owner -h localhost -U postgres -d #{dbname} #{app}_db_bkup")
+        run("pg_restore --verbose --clean --no-acl --no-owner -h localhost -U postgres -d #{dbname} #{app}-db-bkup")
 
         puts "-----> Backup already restored...".green
       end
