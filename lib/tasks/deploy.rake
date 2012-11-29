@@ -6,7 +6,7 @@ namespace :heroku do
   end
 
   def confirm(message)
-    print "\n#{message}\nAre you sure? [Yn] "
+    print "\n#{message}\nAre you sure? [Yn] ".red
     raise 'Aborted' unless STDIN.gets.chomp.downcase == 'y'
   end
 
@@ -15,17 +15,19 @@ namespace :heroku do
     task :staging do
       APP = ENV["STAGING_APP"]
 
-      puts "-----> Backing up database via Heroku..."
+      puts "-----> Backing up database via Heroku...".yellow
       run "heroku pgbackups:capture --expire --app #{APP}"
 
-      puts "-----> Pushing..."
+      puts "-----> Pushing application to heroku...".yellow
       run "git push git@heroku.com:#{APP}.git HEAD:master -f"
 
-      puts "-----> Migrating..."
+      puts "-----> Excuting migraitons...".yellow
       run "heroku run rake db:migrate --app #{APP}"
 
-      puts "-----> Restarting..."
+      puts "-----> Restarting...".yellow
       run "heroku restart --app #{APP}"
+
+      puts "-----> Done! :)...".green
     end
 
     desc "Deploy application to production"
@@ -34,51 +36,53 @@ namespace :heroku do
 
       current_branch = Git.open(File.expand_path(Rails.root)).current_branch
       if current_branch != "production"
-        puts "-----> You can't do a deploy from '#{current_branch}'. Please use 'production' branch."
+        puts "-----> You can't do a deploy from '#{current_branch}'. Please use 'production' branch.".red
         exit
       end
 
       if ENV['SKIP_TESTS'] != "true"
-        puts "-----> Running all specs..."
+        puts "-----> Running all specs...".yellow
         Rake::Task['spec'].invoke
       end
 
-      print "\nPut in maintenance mode? [Yn] "
+      print "\nPut in maintenance mode? [Yn] ".red
       maintenance = (ENV['MAINTENANCE'] == "true" or (STDIN.gets.chomp.downcase == 'y'))
 
       if maintenance
-        puts "-----> Setting Maintenance on..."
+        puts "-----> Setting Maintenance on...".yellow
         run "heroku maintenance:on --app #{APP}"
 
-        puts "-----> Restarting..."
+        puts "-----> Restarting...".yellow
         run "heroku restart --app #{APP}"
 
-        puts "-----> Waiting 20 seconds to app come back (in maintenance mode)..."
+        puts "-----> Waiting 20 seconds to app come back (in maintenance mode)...".yellow
         sleep(20)
       end
 
-      puts "-----> Backing up database via Heroku..."
+      puts "-----> Backing up database via Heroku...".yellow
       run "heroku pgbackups:capture --expire --app #{APP}"
 
       iso_date = Time.now.strftime('%Y-%m-%dT%H%M%S')
       tag_name = "production-#{iso_date}"
-      puts "-----> Tagging as #{tag_name}..."
+      puts "-----> Tagging as #{tag_name}...".yellow
       run "git tag #{tag_name} production"
 
-      puts "-----> Pushing..."
+      puts "-----> Pushing...".yellow
       run "git push origin #{tag_name}"
       run "git push git@heroku.com:#{APP}.git #{tag_name}:master"
 
-      puts "-----> Migrating..."
+      puts "-----> Migrating...".yellow
       run "heroku run rake db:migrate --app #{APP}"
 
       if maintenance
-        puts "Setting Maintenance off..."
+        puts "Setting Maintenance off..."yellow
         run "heroku maintenance:off --app #{APP}"
       end
 
-      puts "-----> Restarting..."
+      puts "-----> Restarting...".yellow
       run "heroku restart --app #{APP}"
+
+      puts "-----> Done! :)...".green
     end
   end
 end

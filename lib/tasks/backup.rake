@@ -6,10 +6,10 @@ namespace :heroku do
 
   namespace :backup do
     def backup(app)
-      puts "-----> Backing-up #{app}..."
+      puts "-----> Backing-up #{app}...".yellow
       run("heroku pgbackups:capture --app #{app} --expire")
 
-      puts "-----> Downloading backup..."
+      puts "-----> Downloading backup...".yellow
       run("curl -o #{app}_db_bkup `heroku pgbackups:url --app #{app}`")
     end
 
@@ -27,8 +27,11 @@ namespace :heroku do
   namespace :db do
     namespace :restore do
       def restore(app)
-        puts "-----> Backup restoring..."
+        puts "-----> Backup restoring...".yellow
+
         run("pg_restore --verbose --clean --no-acl --no-owner -h localhost -U postgres -d #{dbname} #{app}_db_bkup")
+
+        puts "-----> Backup already restored...".green
       end
 
       desc "Restore heroku production database locally"
