@@ -18,4 +18,5 @@ Gem::Specification.new do |gem|
   gem.require_paths = ["lib"]
 
   gem.add_runtime_dependency('colored', '~> 1.2')
+  gem.add_runtime_dependency('git', '1.2.5')
 end
