@@ -34,7 +34,7 @@ namespace :heroku do
     task :production do
       APP = ENV["PRODUCTION_APP"]
 
-      current_branch = Git.open(File.expand_path(Rails.root)).current_branch
+      current_branch = `git rev-parse --abbrev-ref HEAD`
       if current_branch != "production"
         puts "-----> You can't do a deploy from '#{current_branch}'. Please use 'production' branch.".red
         exit
