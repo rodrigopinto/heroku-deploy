@@ -35,7 +35,7 @@ namespace :heroku do
       APP = ENV["PRODUCTION_APP"]
 
       current_branch = `git rev-parse --abbrev-ref HEAD`
-      if current_branch != "production"
+      if current_branch.strip != "production"
         puts "-----> You can't do a deploy from '#{current_branch}'. Please use 'production' branch.".red
         exit
       end
