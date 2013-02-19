@@ -21,7 +21,7 @@ namespace :heroku do
       puts "-----> Pushing application to heroku...".yellow
       run "git push git@heroku.com:#{APP}.git HEAD:master -f"
 
-      puts "-----> Excuting migraitons...".yellow
+      puts "-----> Migrating...".yellow
       run "heroku run rake db:migrate --app #{APP}"
 
       puts "-----> Restarting...".yellow
