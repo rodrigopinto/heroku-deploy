@@ -36,7 +36,7 @@ namespace :heroku do
 
         run("pg_restore --verbose --clean --no-acl --no-owner -h localhost -U postgres -d #{dbname} #{app}-db-bkup")
 
-        puts "-----> Backup already restored...".green
+        puts "-----> Backup restored...".green
       end
 
       desc "Restore heroku production database locally"
