@@ -1,5 +1,3 @@
-Deprecated, please use [int](https://github.com/Helabs/int).
-
 # heroku-deploy
 
 A collection of rake tasks that help deploy, backup and restore database for your heroku applications.
